@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudentApi.Db;
 using StudentApi.Repositories;
+using StudentApi.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,7 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddTransient<IStudentRepository, StudentRepository>();
 builder.Services.AddTransient<ISubjectRepository, SubjectRepository>();
 builder.Services.AddTransient<IGradeRepository, GradeRepository>();
-builder.Services.AddTransient<IGPARepository, GPARepository>();
+builder.Services.AddTransient<ICalculateGPAService, CalculateGPAService>();
 
 builder.Services.AddDbContextPool<AppDbContext>(c =>
     c.UseSqlServer(builder.Configuration["DefaultConnection"]));

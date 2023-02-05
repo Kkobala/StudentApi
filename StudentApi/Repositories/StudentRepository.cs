@@ -1,5 +1,6 @@
 ﻿using StudentApi.Db;
 using StudentApi.Db.Entities;
+using StudentApi.Db.Mapping;
 using StudentApi.Models.Requests;
 
 namespace StudentApi.Repositories
@@ -8,7 +9,8 @@ namespace StudentApi.Repositories
     {
         private readonly AppDbContext _db;
 
-        public StudentRepository(AppDbContext db)
+        public StudentRepository(
+            AppDbContext db)
         {
             _db = db;
         }
@@ -24,6 +26,7 @@ namespace StudentApi.Repositories
             };
 
             await _db.studentEntities.AddAsync(student);
+            await _db.SaveChangesAsync();
         }
 
         public async Task SaveChangesAsync()
