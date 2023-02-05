@@ -40,8 +40,6 @@ namespace StudentApi.Controllers
                            }).OrderByDescending(x => x.AverageScore).Take(3)
                            .Select(x => x.Subject);
 
-            //await _subjectRepository.SaveChangesAsync();
-
             return Ok(top3Subject);
         }
 
@@ -55,8 +53,6 @@ namespace StudentApi.Controllers
                                AverageScore = _db.gradeEntities.Where(g => g.SubjectId == x.Id).Average(t => t.Score)
                            }).OrderBy(x => x.AverageScore).Take(3)
                            .Select(x => x.Subject);
-
-            //await _subjectRepository.SaveChangesAsync();
 
             return Ok(bottom3Subject);
         }
