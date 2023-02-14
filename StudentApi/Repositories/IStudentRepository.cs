@@ -1,4 +1,5 @@
-﻿using StudentApi.Models.Requests;
+﻿using StudentApi.Db.Entities;
+using StudentApi.Models.Requests;
 
 namespace StudentApi.Repositories
 {
@@ -6,5 +7,6 @@ namespace StudentApi.Repositories
     {
         Task AddStudentAsync(RegisterStudentRequest request);
         Task SaveChangesAsync();
+        //Task UpdateStudentGPA(List<GradeEntity> entities, int id);
     }
 }

@@ -5,8 +5,9 @@ namespace StudentApi.Repositories
 {
     public interface IGradeRepository
     {
-        Task<IEnumerable<GradeEntity>> GetAllAsync(int id);
+        Task<List<GradeEntity>> GetAllAsync(int id);
         Task AddStudentGradeAsync(AddStudentGradeRequest request);
         Task SaveChangesAsync();
+        //Task UpdateStudentGPA(int id);
     }
 }

@@ -2,17 +2,21 @@
 using StudentApi.Db.Entities;
 using StudentApi.Db.Mapping;
 using StudentApi.Models.Requests;
+using StudentApi.Services;
 
 namespace StudentApi.Repositories
 {
     public class StudentRepository : IStudentRepository
     {
         private readonly AppDbContext _db;
+        private readonly ICalculateGPAService _service;
 
         public StudentRepository(
-            AppDbContext db)
+            AppDbContext db,
+            ICalculateGPAService service)
         {
             _db = db;
+            _service = service;
         }
 
         public async Task AddStudentAsync(RegisterStudentRequest request)

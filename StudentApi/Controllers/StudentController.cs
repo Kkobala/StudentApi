@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using StudentApi.Db;
+using StudentApi.Db.Entities;
 using StudentApi.Models.Requests;
 using StudentApi.Repositories;
 using StudentApi.Services;
@@ -56,7 +57,12 @@ namespace StudentApi.Controllers
         [HttpGet("calculate-gpa")]
         public async Task<IActionResult> CalculateStudentGPA(int id)
         {
-            var gpa = await _calculateGPAService.CalculateGPA(id);
+            var studentGrades = await _gradeRepository.GetAllAsync(id); 
+
+            var gpa = _calculateGPAService.CalculateGPA(studentGrades);
+            
+            _db.Update(studentGrades);
+            await _db.SaveChangesAsync();
 
             return Ok(gpa);
         }
@@ -64,7 +70,7 @@ namespace StudentApi.Controllers
         [HttpGet("top-10-student-by-gpa")]
         public async Task<IActionResult> Top10Student()
         {
-            var top10Student = _db.studentEntities
+            var top10Student = _db.gradeEntities
                 .OrderByDescending(x => x.StudentGPA)
                 .Take(10);
 
@@ -73,11 +79,11 @@ namespace StudentApi.Controllers
             return Ok(top10Student);
         }
 
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateStudentGPA(int id)
-        {
-            await _calculateGPAService.UpdateStudentGPA(id);
-            return NoContent();
-        }
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> UpdateStudentGPA(int id)
+        //{
+        //    await _gradeRepository.UpdateStudentGPA(id);
+        //    return NoContent();
+        //}
     }
 }
