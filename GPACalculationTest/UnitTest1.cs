@@ -1,4 +1,5 @@
 using StudentApi.Db.Entities;
+using StudentApi.Models;
 using StudentApi.Services;
 
 namespace GPACalculationTest
@@ -6,53 +7,31 @@ namespace GPACalculationTest
     public class Tests
     {
         [Test]
-        public void Calculate()
+        public void Calculate_Gpa_When_Score_Is_Above_91()
         {
             var calculator = new CalculateGPAService();
 
-            var studentgrade = new List<GradeEntity>();
-            studentgrade.Add(new GradeEntity
+            var studentgrade = new List<StudentGrades>();
+            studentgrade.Add(new StudentGrades
             {
-                Id = 1,
                 Score = 92,
                 Credits = 4,
             });
 
-            
             var gpacalculate = calculator.CalculateGPA(studentgrade);
 
             Assert.That(gpacalculate, Is.EqualTo(4.0));
         }
 
         [Test]
-        public void CalculateGpa1() 
+        public void Calculate_Gpa_When_Score_Is_Between_81_91()
         {
             var calculator = new CalculateGPAService();
 
-            var studentgrade = new List<GradeEntity>();
+            var studentGrade = new List<StudentGrades>();
 
-            studentgrade.Add(new GradeEntity
+            studentGrade.Add(new StudentGrades
             {
-                Id = 1,
-                Score = 52,
-                Credits = 5,
-            });
-
-            var gpacalculate = calculator.CalculateGPA(studentgrade);
-
-            Assert.That(gpacalculate, Is.EqualTo(0.5));
-        }
-
-        [Test]
-        public void CalculateGpa2()
-        {
-            var calculator = new CalculateGPAService();
-
-            var studentGrade = new List<GradeEntity>();
-
-            studentGrade.Add(new GradeEntity
-            {
-                Id = 1,
                 Score = 86,
                 Credits = 10,
             });
@@ -60,6 +39,24 @@ namespace GPACalculationTest
             var gpaCalculate = calculator.CalculateGPA(studentGrade);
 
             Assert.That(gpaCalculate, Is.EqualTo(3.0));
+        }
+
+        [Test]
+        public void Calculate_Gpa_When_Score_Is_Between_51_61() 
+        {
+            var calculator = new CalculateGPAService();
+
+            var studentgrade = new List<StudentGrades>();
+
+            studentgrade.Add(new StudentGrades
+            {
+                Score = 52,
+                Credits = 5,
+            });
+
+            var gpacalculate = calculator.CalculateGPA(studentgrade);
+
+            Assert.That(gpacalculate, Is.EqualTo(0.5));
         }
     }
 }

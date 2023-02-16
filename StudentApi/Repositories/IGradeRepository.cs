@@ -1,13 +1,15 @@
 ﻿using StudentApi.Db.Entities;
+using StudentApi.Models;
 using StudentApi.Models.Requests;
 
 namespace StudentApi.Repositories
 {
     public interface IGradeRepository
     {
-        Task<List<GradeEntity>> GetAllAsync(int id);
+        Task<IEnumerable<GradeEntity>> GetAllAsync();
         Task AddStudentGradeAsync(AddStudentGradeRequest request);
+        Task<List<StudentGrades>> GetStudentGradesAsync(int studentid);
         Task SaveChangesAsync();
-        //Task UpdateStudentGPA(int id);
+        Task UpdateStudentGPA(int id, double gpa);
     }
 }

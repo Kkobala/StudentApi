@@ -40,37 +40,28 @@ namespace StudentApi.Controllers
         public async Task<IActionResult> AddStudentGrade(AddStudentGradeRequest request)
         {
             await _gradeRepository.AddStudentGradeAsync(request);
-            await _gradeRepository.SaveChangesAsync();
+
+            var studentGrades = await _gradeRepository.GetStudentGradesAsync(request.StudentId);
+
+            var gpa = _calculateGPAService.CalculateGPA(studentGrades);
+
+            await _gradeRepository.UpdateStudentGPA(request.StudentId, gpa);
 
             return Ok();
         }
 
         [HttpGet("get-student-grades")]
-        public async Task<IActionResult> GetStudentGrades(int id)
+        public async Task<IActionResult> GetStudentGrades()
         {
-            var student = await _gradeRepository.GetAllAsync(id);
-            await _gradeRepository.SaveChangesAsync();
+            var student = await _gradeRepository.GetAllAsync();
 
             return Ok(student);
-        }
-
-        [HttpGet("calculate-gpa")]
-        public async Task<IActionResult> CalculateStudentGPA(int id)
-        {
-            var studentGrades = await _gradeRepository.GetAllAsync(id); 
-
-            var gpa = _calculateGPAService.CalculateGPA(studentGrades);
-            
-            _db.Update(studentGrades);
-            await _db.SaveChangesAsync();
-
-            return Ok(gpa);
         }
 
         [HttpGet("top-10-student-by-gpa")]
         public async Task<IActionResult> Top10Student()
         {
-            var top10Student = _db.gradeEntities
+            var top10Student = _db.studentEntities
                 .OrderByDescending(x => x.StudentGPA)
                 .Take(10);
 
@@ -78,12 +69,5 @@ namespace StudentApi.Controllers
 
             return Ok(top10Student);
         }
-
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> UpdateStudentGPA(int id)
-        //{
-        //    await _gradeRepository.UpdateStudentGPA(id);
-        //    return NoContent();
-        //}
     }
 }

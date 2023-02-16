@@ -7,5 +7,6 @@
         public string? StudentLastName { get; set;}
         public string? IdNumber { get; set; }
         public string? Course { get; set; }
+        public double StudentGPA { get; set; }
     }
 } 

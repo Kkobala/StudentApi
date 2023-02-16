@@ -11,8 +11,8 @@ using StudentApi.Db;
 namespace StudentApi.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230214154412_newest")]
-    partial class newest
+    [Migration("20230216124319_initialmig")]
+    partial class initialmig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -32,14 +32,8 @@ namespace StudentApi.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("Credits")
-                        .HasColumnType("int");
-
                     b.Property<int>("Score")
                         .HasColumnType("int");
-
-                    b.Property<double>("StudentGPA")
-                        .HasColumnType("float");
 
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
@@ -48,6 +42,8 @@ namespace StudentApi.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("SubjectId");
 
                     b.ToTable("gradeEntities");
                 });
@@ -68,6 +64,9 @@ namespace StudentApi.Migrations
                         .IsRequired()
                         .HasMaxLength(11)
                         .HasColumnType("nvarchar(11)");
+
+                    b.Property<double>("StudentGPA")
+                        .HasColumnType("float");
 
                     b.Property<string>("StudentLastName")
                         .IsRequired()
@@ -101,6 +100,17 @@ namespace StudentApi.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("subjectEntities");
+                });
+
+            modelBuilder.Entity("StudentApi.Db.Entities.GradeEntity", b =>
+                {
+                    b.HasOne("StudentApi.Db.Entities.SubjectEntity", "Subject")
+                        .WithMany()
+                        .HasForeignKey("SubjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Subject");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using StudentApi.Db;
 using StudentApi.Db.Entities;
+using StudentApi.Models;
 using StudentApi.Models.Requests;
 using StudentApi.Services;
 
@@ -19,17 +20,26 @@ namespace StudentApi.Repositories
             _service = service;
         }
 
-        public async Task<List<GradeEntity>> GetAllAsync(int studentid)
+        public async Task<List<StudentGrades>> GetStudentGradesAsync(int studentid)
         {
-            return await _db.gradeEntities
-                .Where(x => x.StudentId == studentid)
-                .Select(x => new GradeEntity
+            var student = await _db.studentEntities.FindAsync(studentid);
+
+            if (student == null)
+            {
+                throw new ArgumentException("student not found");
+            }
+
+            var studentGrades = _db.gradeEntities
+                .Include(g => g.Subject)
+                .Where(g => g.StudentId == studentid)
+                .Select(g => new StudentGrades
                 {
-                    StudentId = x.StudentId,
-                    Credits = x.SubjectId,
-                    Score = x.Score,
+                    Credits = g.Subject.Credits,
+                    Score = g.Score,
                 })
-                .ToListAsync();
+                .ToList();
+
+            return studentGrades;
         }
 
         public async Task AddStudentGradeAsync(AddStudentGradeRequest request)
@@ -46,20 +56,23 @@ namespace StudentApi.Repositories
             }
 
             await _db.gradeEntities.AddAsync(grade);
+            await _db.SaveChangesAsync();
         }
 
-        public async Task UpdateStudentGPA(int id)
+        public async Task UpdateStudentGPA(int id, double gpa)
         {
-            var grades = await _db.gradeEntities.Where(g => g.StudentId == id).ToListAsync();
+            var student = await _db.studentEntities.FindAsync(id);
 
-            var gpa = _service.CalculateGPA(grades);
-
-            var grade = await _db.gradeEntities.FindAsync(id);
-            grade!.StudentGPA = gpa;
-
-            _db.gradeEntities.Update(grade);
+            student!.StudentGPA = gpa; 
 
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<GradeEntity>> GetAllAsync()
+        {
+            await _db.gradeEntities.ToListAsync();
+            await _db.SaveChangesAsync();
+            return _db.gradeEntities;
         }
 
         public async Task SaveChangesAsync()

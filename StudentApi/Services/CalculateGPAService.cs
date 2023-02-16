@@ -1,11 +1,10 @@
-﻿using StudentApi.Db;
-using StudentApi.Db.Entities;
+﻿using StudentApi.Models;
 
 namespace StudentApi.Services
 {
     public class CalculateGPAService : ICalculateGPAService
     {
-        public double CalculateGPA(List<GradeEntity> gradesEntity)
+        public double CalculateGPA(List<StudentGrades> gradesEntity)
         {
             double totalCredits = 0;
             double total = 0;
