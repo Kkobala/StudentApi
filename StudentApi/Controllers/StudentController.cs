@@ -65,8 +65,6 @@ namespace StudentApi.Controllers
                 .OrderByDescending(x => x.StudentGPA)
                 .Take(10);
 
-            await _studentrepository.SaveChangesAsync();
-
             return Ok(top10Student);
         }
     }
